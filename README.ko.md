@@ -38,6 +38,7 @@ brew install egovframedev-latest
   4.0 및 v3.10은 Intel/AMD x64 바이너리만 제공됩니다.
 
 ```bash
+brew install egovframedev@5.0.1
 brew install egovframedev@5.0.0
 brew install egovframedev@4.3.1
 brew install egovframedev@4.3.0

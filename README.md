@@ -39,6 +39,7 @@ brew install egovframedev-latest
 v4.0 & v3.10 are provided as Intel/AMD x64 binaries only.
    
 ```bash
+brew install egovframedev@5.0.1
 brew install egovframedev@5.0.0
 brew install egovframedev@4.3.1
 brew install egovframedev@4.3.0
