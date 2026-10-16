@@ -12,7 +12,7 @@ cask "egovframedev@4.3.1" do
   homepage "https://www.egovframe.go.kr/"
 
   livecheck do
-    url "https://www.egovframe.go.kr/home/sub.do?menuNo=39"
+    url "https://www.egovframe.go.kr/home/sub.do?menuNo=40"
     regex(/개발자용\s개발환경\s(\d+(?:\.\d+)+).*/i)
   end
 
