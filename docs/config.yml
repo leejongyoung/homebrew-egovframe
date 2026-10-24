@@ -1,0 +1,42 @@
+# eGovFrame Homebrew Tap Documentation Configuration
+# Default language for the root README.md
+# Supported: en, ko, es, vi, ar, fr
+default_language: en
+
+# Language file mapping
+languages:
+  en: docs/README.en.md
+  ko: docs/README.ko.md
+  es: docs/README.es.md
+  vi: docs/README.vi.md
+  ar: docs/README.ar.md
+  fr: docs/README.fr.md
+
+# Language selector badge configuration
+# Each language has a flat badge (current) and outline badge (others)
+# Format: lang_code: { badge_url, target_file }
+language_badges:
+  en:
+    badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/en/flat.svg"
+    outline_badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/en/outline.svg"
+    target: "README.md"
+  ko:
+    badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ko/flat.svg"
+    outline_badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ko/outline.svg"
+    target: "README.ko.md"
+  es:
+    badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/es/flat.svg"
+    outline_badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/es/outline.svg"
+    target: "docs/README.es.md"
+  vi:
+    badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/vi/flat.svg"
+    outline_badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/vi/outline.svg"
+    target: "docs/README.vi.md"
+  ar:
+    badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/flat.svg"
+    outline_badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/outline.svg"
+    target: "docs/README.ar.md"
+  fr:
+    badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/flat.svg"
+    outline_badge: "https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg"
+    target: "docs/README.fr.md"
