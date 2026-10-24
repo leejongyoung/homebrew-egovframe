@@ -1,7 +1,7 @@
 cask "egovframedev-latest" do
   arch arm: "AArch64", intel: "x86_64"
 
-  version "5.0.2"
+  version "5.0.1"
   sha256 arm:   "17aa276ec0775afc5169c9dbfab56bbdd94d4f74940a371c1b46608d59e57c32",
          intel: "cbe4400bacd588b622b798409dc3f4e92bbb67f5365db1b335372864a0788b23"
 
