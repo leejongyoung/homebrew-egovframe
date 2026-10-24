@@ -32,6 +32,10 @@ jobs:
           git fetch --quiet origin main work
           if git merge-base --is-ancestor upstream/main origin/main; then
             echo "main already contains upstream/main"
+            extra=$(git rev-list --count upstream/main..origin/main)
+            if [ "$extra" != "0" ]; then
+              echo "::warning::main is $extra commit(s) ahead of upstream — main should stay a pure mirror"
+            fi
           elif git merge-base --is-ancestor origin/main upstream/main; then
             n=$(git rev-list --count origin/main..upstream/main)
             git push origin upstream/main:refs/heads/main
