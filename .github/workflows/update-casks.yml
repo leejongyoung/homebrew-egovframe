@@ -1,0 +1,100 @@
+name: Update casks
+
+# Detects new eGovFrame IDE releases on egovframe.go.kr and opens a pull request into `work`.
+# Nothing is merged automatically. A PR opened with GITHUB_TOKEN does not trigger ci.yml,
+# so this job runs `brew style` on the generated casks itself before opening the PR.
+
+on:
+  schedule:
+    - cron: "17 21 * * *" # 06:17 KST, daily
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only detect new releases; download nothing, open no PR"
+        type: boolean
+        default: false
+      verify:
+        description: "Instead of updating: download this existing version's DMGs and compare with the cask's SHA-256 (e.g. 5.0.2)"
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-casks
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: macos-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      # Keep before the update step: when it ran after, the update's file changes were gone from the working tree
+      # (observed: `git commit` found nothing to commit).
+      - uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # main
+
+      - name: Verify an existing cask against the official DMGs
+        if: ${{ inputs.verify != '' }}
+        env:
+          VERIFY: ${{ inputs.verify }}
+        run: python3 scripts/update_casks.py --verify "$VERIFY"
+
+      - name: Detect and add new releases
+        id: update
+        if: ${{ inputs.verify == '' }}
+        run: python3 scripts/update_casks.py ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: brew style on the generated casks
+        if: ${{ steps.update.outputs.changed == 'true' }}
+        env:
+          ADDED: ${{ steps.update.outputs.added }}
+        run: |
+          casks=("leejongyoung/egovframe/egovframedev-latest")
+          IFS=, read -ra added <<<"$ADDED"
+          for v in "${added[@]}"; do casks+=("leejongyoung/egovframe/egovframedev@$v"); done
+          echo "styling: ${casks[*]}"
+          brew style "${casks[@]}"
+
+      - name: Open pull request
+        if: ${{ steps.update.outputs.changed == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ADDED: ${{ steps.update.outputs.added }}
+          REMOVED: ${{ steps.update.outputs.removed }}
+        run: |
+          set -euo pipefail
+          versions=${ADDED//,/ }
+          branch="auto/egovframedev-${ADDED//,/-}"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            echo "::notice::$branch already exists on origin (open or closed PR) — not opening another"
+            exit 0
+          fi
+          # The credentials checkout persisted are gone after setup-homebrew; let gh answer git's auth prompt.
+          gh auth setup-git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git status --short
+          git add -A Casks README.md README.ko.md
+          title="feat(casks): add egovframedev@${ADDED//,/, egovframedev@}"
+          git commit -m "$title"
+          git push origin "$branch"
+          {
+            echo "Detected on https://www.egovframe.go.kr/home/sub.do?menuNo=40 and downloaded from the official host."
+            echo
+            for v in $versions; do
+              echo "### $v"
+              sed -n '/sha256/,/intel:/p' "Casks/egovframedev@$v.rb" | sed 's/^ *//; s/^sha256 //; s/^/    /'
+              echo
+            done
+            if [ -n "$REMOVED" ]; then echo "Removed older patch casks of the same series: ${REMOVED//,/, }"; fi
+            echo
+            echo "Merging this publishes the GitHub Release for the new version (release.yml)."
+            echo
+            echo "Check before merging: \`gh workflow run update-casks.yml -f verify=<version>\` re-downloads the DMGs and compares the hashes."
+          } > body.md
+          gh pr create --base work --head "$branch" --title "$title" --body-file body.md

@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [work]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scripts:
+    name: Update script tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - run: python3 -m unittest discover -s tests -v
+
+  tap-syntax:
+    name: Tap syntax (brew readall, style, audit)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # main
+      - name: Every cask loads on every OS/arch
+        run: brew readall --aliases --os=all --arch=all leejongyoung/egovframe
+      - name: brew style and audit (except .github/style-exempt.txt)
+        run: |
+          casks=()
+          for f in Casks/*.rb; do
+            name=$(basename "$f" .rb)
+            if grep -qxF "$name" .github/style-exempt.txt; then
+              echo "style-exempt: $name"
+            else
+              casks+=("leejongyoung/egovframe/$name")
+            fi
+          done
+          brew style "${casks[@]}"
+          brew audit --cask --except=installed "${casks[@]}"

@@ -1,41 +1,47 @@
 # homebrew-egovframe
 
+<!-- latest-badge:start -->
+[![전자정부표준프레임워크 5.0.2](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/5.0.2/flat-ko.svg)](https://www.egovframe.go.kr/)
+<!-- latest-badge:end -->
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
+[English](README.md)
+
+<!-- work-only:start -->
+[![CI](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml)
+[![Update casks](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml)
+
+> 이 fork는 [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe)를 추적합니다. 이 fork에서 설치하려면 아래 명령의 `egovframework/egovframe`을 `leejongyoung/egovframe`으로 바꾸세요. 운영자 문서는 [유지 관리](.github/MAINTENANCE.md)를 참고하세요.
+<!-- work-only:end -->
+
 ## 소개
 
-이곳은 eGovFrame의 Homebrew Tap(3rd party repository)입니다. 여기에는 eGovFrame의 통합 개발 환경(IDE)용 Cask들이 포함되어 있습니다.
+macOS용 전자정부 표준프레임워크 개발환경(IDE)을 설치하는 Homebrew tap입니다. 설치 파일은 표준프레임워크 공식 서버에서 내려받습니다.
 
-## eGovFrame에 대하여
+- [표준프레임워크 포털](https://www.egovframe.go.kr/)
+- [개발환경 다운로드](https://www.egovframe.go.kr/home/sub.do?menuNo=40)
 
-- 이름: egovframe
-- 설명: eGovFrame은 대한민국 정부에서 제공하는 오픈 소스 프레임워크입니다. 이는 웹 기반 공공 서비스 개발을 위해 설계되었습니다. 정부 표준 개발 플랫폼으로서, eGovFrame은 공공 부문 IT 프로젝트에 중요한 역할을 합니다. 전 세계의 사용자가 사용할 수 있도록 공개되어 있습니다.
-- 홈페이지: [eGovFrame 공식 웹사이트](https://www.egovframe.go.kr/)
+## 설치 방법
 
-## 사용 방법
+### 공식 tap 추가
 
-eGovFrame IDE의 최신 버전을 설치하려면:
-
-```bash
-brew install egovframedev
-```
-
-특정 버전의 eGovFrame IDE를 설치하려면 다음 단계를 따르세요:
-
-1. eGovFrame 저장소를 Homebrew에 추가합니다(최초 1회):
+[Homebrew](https://brew.sh/)를 설치한 뒤 최초 한 번 실행합니다.
 
 ```bash
 brew tap egovframework/egovframe
 ```
 
-1. 최신 버전의 eGovFrame IDE를 설치합니다:
-
-Apple Silicon ARM64 및 Intel/AMD x64 바이너리가 모두 제공됩니다.
+### 최신 버전 설치
 
 ```bash
-brew install egovframedev-latest
+brew install --cask egovframework/egovframe/egovframedev-latest
 ```
 
-1. 원하는 버전의 eGovFrame IDE를 설치합니다:
-  4.0 및 v3.10은 Intel/AMD x64 바이너리만 제공됩니다.
+이 tap의 최신 버전 cask 이름은 `egovframedev-latest`입니다. 버전별 cask에서 버전 번호를 생략하는 방식이 아니라, 위 이름을 명시해 설치합니다.
+
+### 특정 버전 설치
+
+필요한 버전의 명령 하나를 선택해 실행합니다.
 
 ```bash
 brew install egovframedev@5.0.2
@@ -46,12 +52,24 @@ brew install egovframedev@4.0.0
 brew install egovframedev@3.10.0
 ```
 
-버전을 지정하는 것은 선택사항입니다. 생략하면 최신 버전이 설치됩니다.
+위 명령은 공식 tap을 추가한 상태를 기준으로 합니다. 다른 tap에도 같은 이름의 cask가 있다면 `egovframework/egovframe/egovframedev@<버전>` 형식으로 원하는 버전의 전체 이름을 지정하세요.
 
-## 앱 설치 경로
+### 최신 cask 업데이트
 
-`/Applications/` 디렉토리(응용 프로그램 디렉토리) 아래에 설치되며, 다음 형식의 앱 이름으로 확인 가능합니다 (X.X.X는 버전을 의미합니다).
+```bash
+brew update
+brew upgrade --cask egovframework/egovframe/egovframedev-latest
+```
 
-- 4.3.1 이하 버전: `eGovFrameDev-X.X.X-Mac-AArch64.app` 또는 `eGovFrameDev-X.X.X-Mac-x86_64.app`
-- 5.0.0 이상 버전: `eGovFrameDev-X.X.X-macOS-AArch64.app` 또는 `eGovFrameDev-X.X.X-macOS-x86_64.app`
+## 지원 아키텍처와 앱 설치 경로
 
+- 위 목록에서 3.10.0·4.0.0을 제외한 cask는 Apple Silicon(ARM64)과 Intel(x86_64)용 설치 파일을 제공합니다. Homebrew가 아키텍처에 맞는 파일을 선택합니다.
+- 3.10.0·4.0.0은 Intel(x86_64)용 설치 파일만 제공하며 Apple Silicon 네이티브 빌드는 아닙니다.
+- 앱은 `/Applications/` 아래에 설치됩니다.
+  - 3.10.0·4.0.0: `eGovFrameDev-X.X.X-Mac-64bit.app`
+  - 기존 `Mac` 이름을 사용하는 이중 아키텍처 cask: `eGovFrameDev-X.X.X-Mac-AArch64.app` 또는 `eGovFrameDev-X.X.X-Mac-x86_64.app`
+  - 새 `macOS` 이름을 사용하는 이중 아키텍처 cask: `eGovFrameDev-X.X.X-macOS-AArch64.app` 또는 `eGovFrameDev-X.X.X-macOS-x86_64.app`
+
+## 라이선스
+
+[LICENSE](LICENSE)를 참고하세요. eGovFrame 명칭과 로고의 권리는 각 권리자에게 있습니다.
