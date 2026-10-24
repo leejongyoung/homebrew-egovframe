@@ -1,5 +1,14 @@
 # homebrew-egovframe
 
+<!-- latest-badge:start -->
+[![전자정부표준프레임워크 5.0.2](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/5.0.2/flat-ko.svg)](https://www.egovframe.go.kr/)
+<!-- latest-badge:end -->
+[![CI](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml)
+[![Update casks](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
+> 이 저장소는 공식 [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe)를 추적합니다. 이 저장소에서 설치하려면 아래 단계의 `egovframework/egovframe` 대신 `leejongyoung/egovframe`를 tap 하세요. [유지 관리](#유지-관리)를 참고하세요.
+
 ## 소개
 
 이곳은 eGovFrame의 Homebrew Tap(3rd party repository)입니다. 여기에는 eGovFrame의 통합 개발 환경(IDE)용 Cask들이 포함되어 있습니다.
@@ -54,4 +63,11 @@ brew install egovframedev@3.10.0
 
 - 4.3.1 이하 버전: `eGovFrameDev-X.X.X-Mac-AArch64.app` 또는 `eGovFrameDev-X.X.X-Mac-x86_64.app`
 - 5.0.0 이상 버전: `eGovFrameDev-X.X.X-macOS-AArch64.app` 또는 `eGovFrameDev-X.X.X-macOS-x86_64.app`
+
+## 유지 관리
+
+- `main`은 upstream `eGovFramework/homebrew-egovframe`와 똑같이 유지합니다. 매일 실행되는 워크플로([`sync-upstream.yml`](.github/workflows/sync-upstream.yml))가 fast-forward하고, `work`가 뒤처지면 `work`로 들어가는 풀 리퀘스트를 엽니다.
+- `work`(기본 브랜치)에는 이 저장소만의 변경(CI, 자동화, README 배지)을 둡니다.
+- 매일 실행되는 워크플로([`update-casks.yml`](.github/workflows/update-casks.yml))가 [egovframe.go.kr](https://www.egovframe.go.kr/home/sub.do?menuNo=40)의 릴리스 목록(Cask `livecheck`과 같은 페이지)을 읽습니다. `egovframedev-latest`보다 새롭고 두 아키텍처의 macOS DMG가 모두 있는 릴리스가 있으면 DMG를 내려받아 SHA-256을 계산하고, `Casks/egovframedev@X.Y.Z.rb`를 추가하고, 같은 X.Y 계열의 이전 패치 Cask를 지우고, `egovframedev-latest`·위의 설치 목록·배지를 갱신한 뒤 `brew style`을 통과하면 풀 리퀘스트를 엽니다. 자동으로 머지하지는 않습니다.
+- 직접 실행: `python3 scripts/update_casks.py --dry-run`(감지만) 또는 `python3 scripts/update_casks.py`. 테스트: `python3 -m unittest discover -s tests -v`.
 
