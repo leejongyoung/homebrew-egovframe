@@ -25,3 +25,28 @@ jobs:
       - uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # main
       - name: Every cask passes readall, style and audit
         run: bash scripts/check_tap.sh
+# work-only:start
+
+  sync-upstream-submit:
+    name: Sync upstream-submit branch
+    needs: [scripts, tap-syntax]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/work'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - name: Update upstream-submit when no upstream PR is open
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh auth setup-git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          latest=$(python3 scripts/release_notes.py --latest)
+          bash scripts/open_upstream_pr.sh --update-branch upstream-submit \
+            -m "feat(casks): sync eGovFrame IDE $latest and installation guides"
+# work-only:end

@@ -2,8 +2,8 @@
 
 <!-- latest-badge:start -->
 [![إطار eGovFrame القياسي 5.0.2](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/5.0.2/flat-ar.svg)](https://www.egovframe.go.kr/)
-[![CI](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/ci.yml/badge.svg)](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/ci.yml)
-[![Update casks](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/update-casks.yml/badge.svg)](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/update-casks.yml)
+[![CI](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml)
+[![Update casks](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](../LICENSE)
 <!-- latest-badge:end -->
 
@@ -13,6 +13,10 @@
 [![Tiếng Việt](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/vi/outline.svg)](README.vi.md)
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/flat.svg)](README.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](README.fr.md)
+
+<!-- work-only:start -->
+> يتتبع هذا المستودع الفرعي المستودع الرسمي [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe). للتثبيت من هذا المستودع الفرعي، استبدل `egovframework/egovframe` بـ `leejongyoung/egovframe` في الأوامر أدناه. وثائق الصيانة: [Maintenance](../.github/MAINTENANCE.md).
+<!-- work-only:end -->
 
 ## نبذة
 

@@ -1,0 +1,64 @@
+name: Sync upstream
+
+# `main` is a pure mirror of eGovFramework/homebrew-egovframe (fast-forward only, never forced).
+# When `work` is behind `main`, opens a pull request main -> work.
+
+on:
+  schedule:
+    - cron: "43 20 * * *" # 05:43 KST, daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Fast-forward main from upstream
+        run: |
+          set -euo pipefail
+          git remote add upstream https://github.com/eGovFramework/homebrew-egovframe.git
+          git fetch --quiet upstream main
+          git fetch --quiet origin main work
+          if git merge-base --is-ancestor upstream/main origin/main; then
+            echo "main already contains upstream/main"
+            extra=$(git rev-list --count upstream/main..origin/main)
+            if [ "$extra" != "0" ]; then
+              echo "::warning::main is $extra commit(s) ahead of upstream — main should stay a pure mirror"
+            fi
+          elif git merge-base --is-ancestor origin/main upstream/main; then
+            n=$(git rev-list --count origin/main..upstream/main)
+            git push origin upstream/main:refs/heads/main
+            echo "main fast-forwarded by $n commit(s)" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::error::main has commits that are not in upstream (diverged) — not synced, fix by hand"
+            exit 1
+          fi
+
+      - name: Open pull request main -> work when work is behind
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch --quiet origin main work
+          if git merge-base --is-ancestor origin/main origin/work; then
+            echo "work already contains main"
+            exit 0
+          fi
+          if [ "$(gh pr list --base work --head main --state open --json number --jq length)" != "0" ]; then
+            echo "a main -> work pull request is already open"
+            exit 0
+          fi
+          gh pr create --base work --head main \
+            --title "Sync upstream into work" \
+            --body "Upstream eGovFramework/homebrew-egovframe commits that are on \`main\` but not yet on \`work\`. GitHub shows conflicts here if the automatic cask updates and upstream touched the same lines."

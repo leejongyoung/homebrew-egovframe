@@ -2,8 +2,8 @@
 
 <!-- latest-badge:start -->
 [![Khung chuẩn eGovFrame 5.0.2](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/5.0.2/flat-vi.svg)](https://www.egovframe.go.kr/)
-[![CI](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/ci.yml/badge.svg)](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/ci.yml)
-[![Update casks](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/update-casks.yml/badge.svg)](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/update-casks.yml)
+[![CI](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml)
+[![Update casks](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](../LICENSE)
 <!-- latest-badge:end -->
 
@@ -13,6 +13,10 @@
 [![Tiếng Việt](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/vi/flat.svg)](README.vi.md)
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/outline.svg)](README.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](README.fr.md)
+
+<!-- work-only:start -->
+> Bản fork này theo dõi [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe). Để cài đặt từ fork này, hãy thay `egovframework/egovframe` bằng `leejongyoung/egovframe` trong các lệnh bên dưới. Tài liệu vận hành: [Maintenance](../.github/MAINTENANCE.md).
+<!-- work-only:end -->
 
 ## Giới thiệu
 

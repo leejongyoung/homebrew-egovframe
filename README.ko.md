@@ -2,8 +2,8 @@
 
 <!-- latest-badge:start -->
 [![전자정부표준프레임워크 5.0.2](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/5.0.2/flat-ko.svg)](https://www.egovframe.go.kr/)
-[![CI](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/ci.yml/badge.svg)](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/ci.yml)
-[![Update casks](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/update-casks.yml/badge.svg)](https://github.com/eGovFramework/homebrew-egovframe/actions/workflows/update-casks.yml)
+[![CI](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/ci.yml)
+[![Update casks](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml/badge.svg)](https://github.com/leejongyoung/homebrew-egovframe/actions/workflows/update-casks.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 <!-- latest-badge:end -->
 
@@ -13,6 +13,10 @@
 [![Tiếng Việt](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/vi/outline.svg)](docs/README.vi.md)
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/outline.svg)](docs/README.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](docs/README.fr.md)
+
+<!-- work-only:start -->
+> 이 fork는 [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe)를 추적합니다. 이 fork에서 설치하려면 아래 명령의 `egovframework/egovframe`을 `leejongyoung/egovframe`으로 바꾸세요. 운영자 문서는 [유지 관리](.github/MAINTENANCE.md)를 참고하세요.
+<!-- work-only:end -->
 
 ## 소개
 

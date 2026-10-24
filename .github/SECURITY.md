@@ -8,7 +8,7 @@
 Use GitHub's private vulnerability reporting instead:
 아래의 GitHub 비공개 취약점 신고를 이용해 주세요.
 
-➡ <https://github.com/eGovFramework/homebrew-egovframe/security/advisories/new>
+➡ <https://github.com/leejongyoung/homebrew-egovframe/security/advisories/new>
 
 (If private vulnerability reporting is not enabled on the repository, please report through the official [eGovFrame portal](https://www.egovframe.go.kr/) instead of opening a public issue. / 저장소에 비공개 취약점 신고가 아직 활성화되어 있지 않다면 공개 이슈 대신 [표준프레임워크 포털](https://www.egovframe.go.kr/)을 통해 접수해 주세요.)
 
@@ -39,18 +39,24 @@ Out of scope, please report to the owner / 범위 밖은 해당 주체에 알려
 - The eGovFrame IDE and its download server → the eGovFrame project, <https://www.egovframe.go.kr/> and
   [eGovFramework](https://github.com/eGovFramework). / eGovFrame IDE와 배포 서버 → 표준프레임워크 포털과 eGovFramework.
 - Homebrew itself → <https://github.com/Homebrew/brew/security/policy>. / Homebrew 자체.
+<!-- work-only:start -->
+- A problem that exists identically in the official tap
+  [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe) → report it there as well.
+  공식 tap에도 똑같이 있는 문제는 그쪽에도 알려 주세요.
+<!-- work-only:end -->
+
 ## Supported versions / 지원 대상
 
-Only what is in `Casks/` on the default branch (`main`) is maintained: `egovframedev-latest` and the versioned
+Only what is in `Casks/` on the default branch (`work`) is maintained: `egovframedev-latest` and the versioned
 casks listed in the [README](../README.md). Casks removed when a newer patch of the same series arrived are not.
-기본 브랜치(`main`)의 `Casks/`에 있는 것만 관리합니다. 같은 계열의 새 패치가 나와 지워진 cask는 대상이 아닙니다.
+기본 브랜치(`work`)의 `Casks/`에 있는 것만 관리합니다. 같은 계열의 새 패치가 나와 지워진 cask는 대상이 아닙니다.
 
 ## Verifying a download yourself / 직접 해시 확인
 
-Every cask pins SHA-256 for both architectures, and each [Release](https://github.com/eGovFramework/homebrew-egovframe/releases)
+Every cask pins SHA-256 for both architectures, and each [Release](https://github.com/leejongyoung/homebrew-egovframe/releases)
 lists them. To re-check a version against the official server from CI:
-모든 cask는 두 아키텍처의 SHA-256을 고정하고, [Release](https://github.com/eGovFramework/homebrew-egovframe/releases)에도 적혀 있습니다. CI에서 공식 서버와 다시 대조하려면:
+모든 cask는 두 아키텍처의 SHA-256을 고정하고, [Release](https://github.com/leejongyoung/homebrew-egovframe/releases)에도 적혀 있습니다. CI에서 공식 서버와 다시 대조하려면:
 
 ```bash
-gh workflow run update-casks.yml -R eGovFramework/homebrew-egovframe -f verify=5.0.2
+gh workflow run update-casks.yml -R leejongyoung/homebrew-egovframe -f verify=5.0.2
 ```
