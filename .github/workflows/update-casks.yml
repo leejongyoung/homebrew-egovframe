@@ -72,6 +72,8 @@ jobs:
             echo "::notice::$branch already exists on origin (open or closed PR) — not opening another"
             exit 0
           fi
+          # The credentials checkout persisted are gone after setup-homebrew; let gh answer git's auth prompt.
+          gh auth setup-git
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
