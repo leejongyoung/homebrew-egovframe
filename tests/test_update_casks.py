@@ -24,10 +24,16 @@ class FakeMaven:
 
     def __init__(self):
         self.files = {}
+        self.fail_next = {}
         outer = self
 
         class Handler(BaseHTTPRequestHandler):
             def _serve(self, body):
+                if outer.fail_next.get(self.path, 0) > 0:
+                    outer.fail_next[self.path] -= 1
+                    self.send_response(503)
+                    self.end_headers()
+                    return
                 data = outer.files.get(self.path)
                 if data is None:
                     self.send_response(404)
@@ -77,6 +83,9 @@ class UpdateCasksTest(unittest.TestCase):
             shutil.copy(REPO / name, self.tmp / name)
         self.maven = FakeMaven()
         self.addCleanup(self.maven.close)
+        original_delay = uc.RETRY_DELAY
+        uc.RETRY_DELAY = 0
+        self.addCleanup(setattr, uc, "RETRY_DELAY", original_delay)
 
     def run_update(self, html, dry_run=False):
         return uc.run(self.tmp, html, self.maven.base, dry_run, badge_check=False)
@@ -183,6 +192,30 @@ class UpdateCasksTest(unittest.TestCase):
         self.maven.publish("5.0.3")
         with self.assertRaises(SystemExit):
             self.run_update(page("5.0.3"))
+
+    def test_transient_server_errors_are_retried(self):
+        shas = self.maven.publish("5.0.3")
+        for path in self.maven.files:
+            self.maven.fail_next[path] = 2  # first HEAD and first GET of each DMG answer 503
+        result = self.run_update(page("5.0.3"))
+        self.assertEqual(result["added"], ["5.0.3"])
+        self.assertIn(shas["arm"], (self.tmp / "Casks/egovframedev@5.0.3.rb").read_text())
+
+    def test_missing_dmg_is_an_answer_not_retried(self):
+        calls = []
+        original = uc.http
+        uc.http = lambda url, *a, **k: (calls.append(url), original(url, *a, **k))[1]
+        self.addCleanup(setattr, uc, "http", original)
+        self.assertFalse(uc.exists(self.maven.base + "/nope.dmg"))
+        self.assertEqual(len(calls), 1)
+
+    def test_persistent_server_errors_surface_after_retries(self):
+        self.maven.publish("5.0.3")
+        for path in self.maven.files:
+            self.maven.fail_next[path] = 99
+        with self.assertRaises(Exception) as ctx:
+            self.run_update(page("5.0.3"))
+        self.assertTrue(uc.transient(ctx.exception))
 
     def test_discover_versions_dedupes_and_sorts_numerically(self):
         html = page("5.0.2", "4.3.1", "5.0.10", "5.0.2", "3.10.0")

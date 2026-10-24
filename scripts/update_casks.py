@@ -53,20 +53,49 @@ def series(version: str) -> tuple[int, int]:
     return (t[0], t[1] if len(t) > 1 else 0)
 
 
+RETRY_DELAY = 15  # seconds, multiplied by the attempt number; tests set it to 0
+
+
 def http(url: str, method: str = "GET", timeout: int = 60):
     req = urllib.request.Request(url, method=method, headers={"User-Agent": USER_AGENT})
     return urllib.request.urlopen(req, timeout=timeout)
 
 
+def transient(error: Exception) -> bool:
+    """Network hiccups and 5xx/429 are worth retrying; other HTTP statuses are answers."""
+    if isinstance(error, urllib.error.HTTPError):
+        return error.code >= 500 or error.code == 429
+    return isinstance(error, (urllib.error.URLError, TimeoutError, ConnectionError))
+
+
+def with_retries(fn, attempts: int = 4):
+    for attempt in range(1, attempts + 1):
+        try:
+            return fn()
+        except Exception as e:
+            if not transient(e) or attempt == attempts:
+                raise
+            print(f"  request failed ({e}); retry {attempt}/{attempts - 1}", file=sys.stderr)
+            time.sleep(RETRY_DELAY * attempt)
+
+
+def fetch_text(url: str) -> str:
+    with http(url) as r:
+        return r.read().decode("utf-8", "replace")
+
+
 def exists(url: str) -> bool:
-    try:
-        with http(url, "HEAD") as r:
-            return r.status == 200
-    except urllib.error.HTTPError as e:
-        if e.code in (403, 404, 405):
-            e.close()
-            return False
-        raise
+    def head() -> bool:
+        try:
+            with http(url, "HEAD") as r:
+                return r.status == 200
+        except urllib.error.HTTPError as e:
+            if e.code in (403, 404, 405):
+                e.close()
+                return False
+            raise
+
+    return with_retries(head)
 
 
 def discover_versions(page_html: str) -> list[str]:
@@ -107,24 +136,19 @@ def dmg_urls(template: str, version: str, download_base: str) -> dict[str, str]:
     return out
 
 
-def sha256_of(url: str, retries: int = 3) -> str:
-    for attempt in range(1, retries + 1):
-        try:
-            digest = hashlib.sha256()
-            done = 0
-            started = time.monotonic()
-            with http(url, timeout=120) as r:
-                while chunk := r.read(1 << 20):
-                    digest.update(chunk)
-                    done += len(chunk)
-            print(f"  sha256 {digest.hexdigest()[:12]}… {done / 1e6:.0f} MB in {time.monotonic() - started:.0f}s", file=sys.stderr)
-            return digest.hexdigest()
-        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
-            if attempt == retries:
-                raise
-            print(f"  download failed ({e}); retry {attempt}/{retries - 1}", file=sys.stderr)
-            time.sleep(10 * attempt)
-    raise AssertionError("unreachable")
+def sha256_of(url: str) -> str:
+    def download() -> str:
+        digest = hashlib.sha256()
+        done = 0
+        started = time.monotonic()
+        with http(url, timeout=120) as r:
+            while chunk := r.read(1 << 20):
+                digest.update(chunk)
+                done += len(chunk)
+        print(f"  sha256 {digest.hexdigest()[:12]}… {done / 1e6:.0f} MB in {time.monotonic() - started:.0f}s", file=sys.stderr)
+        return digest.hexdigest()
+
+    return with_retries(download)
 
 
 def render_cask(template: str, name: str, version: str, sha: dict[str, str]) -> str:
@@ -247,8 +271,7 @@ def main() -> int:
     if args.verify:
         return verify_existing(args.root, args.verify, args.download_base)
 
-    with http(args.page_url) as r:
-        page = r.read().decode("utf-8", "replace")
+    page = with_retries(lambda: fetch_text(args.page_url))
     if not discover_versions(page):
         print("no versions found on the release page — layout changed?", file=sys.stderr)
         return 1
