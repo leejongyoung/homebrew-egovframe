@@ -33,6 +33,10 @@ jobs:
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
+      # Keep before the update step: when it ran after, the update's file changes were gone from the working tree
+      # (observed: `git commit` found nothing to commit).
+      - uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # main
+
       - name: Verify an existing cask against the official DMGs
         if: ${{ inputs.verify != '' }}
         env:
@@ -44,9 +48,6 @@ jobs:
         if: ${{ inputs.verify == '' }}
         run: python3 scripts/update_casks.py ${{ inputs.dry_run && '--dry-run' || '' }}
 
-      - uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04 # main
-        if: ${{ steps.update.outputs.changed == 'true' }}
-
       - name: brew style on the generated casks
         if: ${{ steps.update.outputs.changed == 'true' }}
         env:
@@ -54,6 +55,7 @@ jobs:
         run: |
           casks="leejongyoung/egovframe/egovframedev-latest"
           for v in ${ADDED//,/ }; do casks="$casks leejongyoung/egovframe/egovframedev@$v"; done
+          echo "styling: $casks"
           brew style $casks
 
       - name: Open pull request
@@ -73,6 +75,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
+          git status --short
           git add -A Casks README.md README.ko.md
           title="feat(casks): add egovframedev@${ADDED//,/, egovframedev@}"
           git commit -m "$title"
