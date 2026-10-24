@@ -1,19 +1,25 @@
-cask "egovframedev@4.2.0" do
+cask "egovframedev@4.2.1" do
   arch arm: "AArch64", intel: "x86_64"
 
-  version "4.2.0"
-  sha256 arm:   "b6c5a3eae903cbc4bdffa490a97853330329a4215af8ae9d5cb8d45d3cbb34c6",
-         intel: "40df38a8eb73df152b8425930e321f1e05b859143554adbbb03465dd904b4f0e"
+  version "4.2.1"
+  sha256 arm:   "10e6343cdc1e4c1d74dbffe5cecc4eca8ef7a589a699f96c5bad30d54ec452ef",
+         intel: "03b63c59d1f458f7ffb0bc16e3efa03fd146fecd862228c8cbdb6e0bad623847"
 
-  url "https://maven.egovframe.go.kr/publist/HDD1/public/eGovFrameDev-#{version}-Mac-#{arch}.dmg"
+  url "https://maven.egovframe.go.kr/publist/HDD1/public/egovframework_v#{version.major_minor}/2_DevelopmentEnvironment/eGovFrame-Dev/#{version}/eGovFrameDev-#{version}-Mac-#{arch}.dmg",
+      user_agent: :fake
   name "egovframe"
   desc "Open-source framework by South Korea for web-based public service development"
   homepage "https://www.egovframe.go.kr/"
 
+  livecheck do
+    url "https://www.egovframe.go.kr/home/sub.do?menuNo=40"
+    regex(/개발자용\s개발환경\s(\d+(?:\.\d+)+).*/i)
+  end
+
   app "eGovFrameDev-#{version}-Mac-#{arch}.app"
 
   postflight do
-    icon_path = "#{Caskroom.path}/egovframedev@4.1.0/#{version}/app.icns"
+    icon_path = "#{Caskroom.path}/egovframedev@4.2.1/#{version}/app.icns"
     app_path = "/Applications/eGovFrameDev-#{version}-Mac-#{arch}.app"
     system_command "mkdir", args: ["-p", File.dirname(icon_path)]
     system_command "curl", args: ["-s", "-o", icon_path, "https://maven.egovframe.go.kr/publist/HDD1/public/app.icns"]
