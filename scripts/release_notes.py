@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import re
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -22,20 +23,32 @@ TAP = "leejongyoung/egovframe"
 RELEASE_PAGE = "https://www.egovframe.go.kr/home/sub.do?menuNo=40"
 
 
+def cask_assets(text: str, version: str) -> dict[str, tuple[str, str]]:
+    per_arch = uc.SHA_BLOCK.search(text)
+    if per_arch:
+        urls = uc.dmg_urls(text, version, uc.DOWNLOAD_BASE)
+        return {"arm": (urls["arm"], per_arch.group(3)),
+                "intel": (urls["intel"], per_arch.group(6))}
+    # The maintained 3.10.0 and 4.0.0 casks provide only the Intel Mac-64bit DMG.
+    scalar = re.search(r'^\s*sha256 "([0-9a-f]{64})"', text, re.M)
+    url = uc.URL_LINE.search(text)
+    if not scalar or not url or "-Mac-64bit.dmg" not in url.group(1):
+        raise ValueError(f"{version}: unsupported cask download/hash format")
+    expanded = (url.group(1).replace("#{version.major_minor}", ".".join(version.split(".")[:2]))
+                .replace("#{version}", version))
+    return {"intel": (expanded, scalar.group(1))}
+
+
 def render(root: Path, version: str, historical: bool = False) -> str:
     casks = root / "Casks"
     path = casks / f"egovframedev@{version}.rb"
     if not path.exists():
         raise SystemExit(f"no cask Casks/egovframedev@{version}.rb")
     text = path.read_text(encoding="utf-8")
-    m = uc.SHA_BLOCK.search(text)
-    if not m:
-        raise SystemExit(f"{path.name}: no per-architecture sha256 (Intel-only legacy cask?)")
-    sha = {"arm": m.group(3), "intel": m.group(6)}
-    urls = uc.dmg_urls(text, version, uc.DOWNLOAD_BASE)
-
+    assets = cask_assets(text, version)
     rows = "\n".join(
-        f"| {ARCH_LABEL[a]} | [`{urls[a].rsplit('/', 1)[1]}`]({urls[a]}) | `{sha[a]}` |" for a in uc.ARCHES)
+        f"| {ARCH_LABEL[arch]} | [`{url.rsplit('/', 1)[1]}`]({url}) | `{sha}` |"
+        for arch, (url, sha) in assets.items())
     footer = [
         "The DMGs are served by the official eGovFrame host; this release does not host them. "
         f"Version detected from [{RELEASE_PAGE}]({RELEASE_PAGE}).",

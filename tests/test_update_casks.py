@@ -78,7 +78,7 @@ class UpdateCasksTest(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.tmp)
-        shutil.copytree(REPO / "Casks", self.tmp / "Casks")
+        shutil.copytree(REPO / "tests/fixtures/Casks", self.tmp / "Casks")
         for name in ("README.md", "README.ko.md"):
             shutil.copy(REPO / name, self.tmp / name)
         self.maven = FakeMaven()

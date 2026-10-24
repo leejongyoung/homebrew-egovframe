@@ -2,7 +2,7 @@ name: Update casks
 
 # Detects new eGovFrame IDE releases on egovframe.go.kr and opens a pull request into `work`.
 # Nothing is merged automatically. A PR opened with GITHUB_TOKEN does not trigger ci.yml,
-# so this job runs `brew style` on the generated casks itself before opening the PR.
+# so this job runs the script tests plus readall/style/audit before opening the PR.
 
 on:
   schedule:
@@ -48,16 +48,11 @@ jobs:
         if: ${{ inputs.verify == '' }}
         run: python3 scripts/update_casks.py ${{ inputs.dry_run && '--dry-run' || '' }}
 
-      - name: brew style on the generated casks
+      - name: Full validation before opening the version PR
         if: ${{ steps.update.outputs.changed == 'true' }}
-        env:
-          ADDED: ${{ steps.update.outputs.added }}
         run: |
-          casks=("leejongyoung/egovframe/egovframedev-latest")
-          IFS=, read -ra added <<<"$ADDED"
-          for v in "${added[@]}"; do casks+=("leejongyoung/egovframe/egovframedev@$v"); done
-          echo "styling: ${casks[*]}"
-          brew style "${casks[@]}"
+          python3 -m unittest discover -s tests -v
+          bash scripts/check_tap.sh
 
       - name: Open pull request
         if: ${{ steps.update.outputs.changed == 'true' }}

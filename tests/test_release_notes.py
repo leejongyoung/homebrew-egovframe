@@ -26,9 +26,24 @@ class ReleaseNotesTest(unittest.TestCase):
     def test_latest_hint_only_for_the_latest_version(self):
         latest = uc.latest_version(REPO / "Casks")
         self.assertIn("egovframedev-latest", rn.render(REPO, latest))
-        notes = rn.render(REPO, "4.3.1")  # older cask, different DMG naming (Mac instead of macOS)
+        notes = rn.render(REPO / "tests/fixtures", "4.3.1")
         self.assertIn("eGovFrameDev-4.3.1-Mac-AArch64.dmg", notes)
         self.assertNotIn("egovframedev-latest", notes)
+
+    def test_intel_only_3x_and_4x_notes_do_not_advertise_arm_downloads(self):
+        fixtures = REPO / "tests/fixtures"
+        expected = {
+            "3.10.0": "c0b36911ba9e527d7f6f87481b183fcf2095756c0b84e36ce28c33c9094feb32",
+            "4.0.0": "4ee5be1d0f67b35bfdf79194831a2b2b36a9836763821e80eebbccc94a711c06",
+        }
+        for version, digest in expected.items():
+            with self.subTest(version=version):
+                notes = rn.render(fixtures, version)
+                self.assertIn(f"eGovFrameDev-{version}-Mac-64bit.dmg", notes)
+                self.assertIn(f"`{digest}`", notes)
+                self.assertIn("| Intel (x86_64) |", notes)
+                self.assertNotIn("| Apple Silicon", notes)
+                self.assertIn(f"brew install egovframedev@{version}", notes)
 
     def test_unknown_version_fails(self):
         with self.assertRaises(SystemExit):
