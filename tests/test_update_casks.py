@@ -143,7 +143,7 @@ class UpdateCasksTest(unittest.TestCase):
         self.assertIn("egovframedev@5.0.2.rb", self.casks())
         self.assertIn("egovframedev@5.1.0.rb", self.casks())
         self.assertIn('version "5.1.0"', (self.tmp / "Casks/egovframedev-latest.rb").read_text())
-        readme = (self.tmp / "README.md").read_text()
+        readme = (self.tmp / "docs/README.md").read_text()
         self.assertIn("brew install egovframedev@5.1.0\nbrew install egovframedev@5.0.2\n", readme)
 
     def test_release_without_both_dmgs_is_skipped_and_changes_nothing(self):
@@ -188,8 +188,7 @@ class UpdateCasksTest(unittest.TestCase):
         self.maven.publish("4.3.2")
         self.assertEqual(self.run_update(page("4.3.2"))["added"], [])
 
-    def test_non_contiguous_install_list_is_rejected(self):
-        readme = self.tmp / "README.md"
+        readme = self.tmp / "docs/README.md"
         text = readme.read_text().replace("brew install egovframedev@4.3.1\n", "brew install egovframedev@4.3.1\n\n", 1)
         readme.write_text(text)
         self.maven.publish("5.0.3")

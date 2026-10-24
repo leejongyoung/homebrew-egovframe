@@ -43,8 +43,8 @@ URL_LINE = re.compile(r'^\s*url "([^"]+)"', re.M)
 INSTALL_LINE = re.compile(r"^brew install egovframedev@\S+$")
 BADGE_BLOCK = re.compile(r"(<!-- latest-badge:start -->\n)[^\n]*((?:\n[^\n]*)*?\n<!-- latest-badge:end -->)")
 READMES = (
-    ("README.md", "eGovFrame", "flat"),
-    ("README.ko.md", "전자정부표준프레임워크", "flat-ko"),
+    ("docs/README.md", "eGovFrame", "flat"),
+    ("docs/README.ko.md", "전자정부표준프레임워크", "flat-ko"),
     ("docs/README.es.md", "Marco Estándar eGovFrame", "flat-es"),
     ("docs/README.vi.md", "Khung chuẩn eGovFrame", "flat-vi"),
     ("docs/README.ar.md", "إطار eGovFrame القياسي", "flat-ar"),
