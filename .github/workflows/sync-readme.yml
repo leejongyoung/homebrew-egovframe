@@ -38,47 +38,7 @@ jobs:
 
       - name: Sync README.md from default language
         id: sync
-        run: |
-          python3 <<'PYEOF'
-import yaml
-import subprocess
-from pathlib import Path
-
-repo_root = Path(".")
-docs_dir = repo_root / "docs"
-
-# Load config
-with open(docs_dir / "config.yml", "r", encoding="utf-8") as f:
-    config = yaml.safe_load(f)
-
-default_lang = config.get("default_language", "en")
-languages = config.get("languages", {})
-
-if default_lang not in languages:
-    print(f"Error: default_language '{default_lang}' not found in languages mapping")
-    exit(1)
-
-source_file = repo_root / languages[default_lang]
-if not source_file.exists():
-    print(f"Error: source file {source_file} not found")
-    exit(1)
-
-# Read source content
-source_content = source_file.read_text(encoding="utf-8")
-
-# Read current README.md
-readme_path = repo_root / "README.md"
-current_content = readme_path.read_text(encoding="utf-8") if readme_path.exists() else ""
-
-if source_content != current_content:
-    readme_path.write_text(source_content, encoding="utf-8")
-    print(f"Updated README.md from {languages[default_lang]}")
-    print("changed=true")
-else:
-    print("README.md already up to date")
-    print("changed=false")
-
-PYEOF
+        run: python3 scripts/sync_readme.py
 
       - name: Commit and push if changed
         if: steps.sync.outputs.changed == 'true'
