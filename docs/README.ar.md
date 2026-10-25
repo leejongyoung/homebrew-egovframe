@@ -15,6 +15,10 @@
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/flat.svg)](README.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](README.fr.md)
 
+<!-- work-only:start -->
+> يتتبع هذا المستودع الفرعي المستودع الرسمي [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe). للتثبيت من هذا المستودع الفرعي، استبدل `egovframework/egovframe` بـ `leejongyoung/egovframe` في الأوامر أدناه. وثائق الصيانة: [Maintenance](../.github/MAINTENANCE.md).
+<!-- work-only:end -->
+
 ## نبذة
 
 حزم Homebrew Cask لبيئة التطوير المتكاملة (IDE) الخاصة بإطار عمل الحكومة الإلكترونية القياسي (eGovFrame) على نظام macOS. يتم تنزيل الحزم مباشرةً من الخادم الرسمي لـ eGovFrame.

@@ -15,6 +15,10 @@
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/outline.svg)](README.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](README.fr.md)
 
+<!-- work-only:start -->
+> 이 fork는 [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe)를 추적합니다. 이 fork에서 설치하려면 아래 명령의 `egovframework/egovframe`을 `leejongyoung/egovframe`으로 바꾸세요. 운영자 문서는 [유지 관리](../.github/MAINTENANCE.md)를 참고하세요.
+<!-- work-only:end -->
+
 ## 소개
 
 macOS용 전자정부 표준프레임워크 개발환경(IDE)을 설치하는 Homebrew tap입니다. 설치 파일은 표준프레임워크 공식 서버에서 내려받습니다.

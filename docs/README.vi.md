@@ -15,6 +15,10 @@
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/outline.svg)](README.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](README.fr.md)
 
+<!-- work-only:start -->
+> Bản fork này theo dõi [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe). Để cài đặt từ fork này, hãy thay `egovframework/egovframe` bằng `leejongyoung/egovframe` trong các lệnh bên dưới. Tài liệu vận hành: [Maintenance](../.github/MAINTENANCE.md).
+<!-- work-only:end -->
+
 ## Giới thiệu
 
 Homebrew tap cung cấp các cask cho môi trường phát triển tích hợp (IDE) eGovFrame trên macOS. Các gói cài đặt được tải trực tiếp từ máy chủ chính thức của eGovFrame.

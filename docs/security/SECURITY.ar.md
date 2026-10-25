@@ -13,7 +13,7 @@
 
 استخدموا بدلًا من ذلك الإبلاغ الخاص عن الثغرات في GitHub:
 
-➡ <https://github.com/eGovFramework/homebrew-egovframe/security/advisories/new>
+➡ <https://github.com/leejongyoung/homebrew-egovframe/security/advisories/new>
 
 إذا لم يكن الإبلاغ الخاص عن الثغرات مفعّلًا في المستودع، فيرجى الإبلاغ عبر [بوابة eGovFrame](https://www.egovframe.go.kr/) الرسمية بدلًا من فتح issue عامة.
 
@@ -36,14 +36,18 @@
 
 - بيئة eGovFrame IDE وخادم التنزيل الخاص بها ← مشروع eGovFrame، <https://www.egovframe.go.kr/> و[eGovFramework](https://github.com/eGovFramework).
 - Homebrew نفسه ← <https://github.com/Homebrew/brew/security/policy>.
+<!-- work-only:start -->
+- مشكلة موجودة بالشكل نفسه في الـ tap الرسمي [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe) ← أبلغوا عنها هناك أيضًا.
+<!-- work-only:end -->
+
 ## الإصدارات المدعومة
 
-يُصان فقط ما هو موجود في `Casks/` على الفرع الافتراضي (`main`): `egovframedev-latest` وملفات cask ذات الإصدارات المحددة المدرجة في [README](../README.ar.md). أما ملفات cask التي حُذفت عند صدور تصحيح أحدث من السلسلة نفسها فلا تُصان.
+يُصان فقط ما هو موجود في `Casks/` على الفرع الافتراضي (`work`): `egovframedev-latest` وملفات cask ذات الإصدارات المحددة المدرجة في [README](../README.ar.md). أما ملفات cask التي حُذفت عند صدور تصحيح أحدث من السلسلة نفسها فلا تُصان.
 
 ## التحقق من التنزيل بنفسك
 
-يثبّت كل cask قيمة SHA-256 لكل معمارية يوفّرها، وتدرجها كل [إصدارة (Release)](https://github.com/eGovFramework/homebrew-egovframe/releases). بعض ملفات cask ذات الإصدارات المحددة (مثل 3.10.0 و4.0.0) مخصصة لـ Intel فقط، لذا تثبّت قيمة تجزئة واحدة. لإعادة فحص إصدار مقابل الخادم الرسمي من CI:
+يثبّت كل cask قيمة SHA-256 لكل معمارية يوفّرها، وتدرجها كل [إصدارة (Release)](https://github.com/leejongyoung/homebrew-egovframe/releases). بعض ملفات cask ذات الإصدارات المحددة (مثل 3.10.0 و4.0.0) مخصصة لـ Intel فقط، لذا تثبّت قيمة تجزئة واحدة. لإعادة فحص إصدار مقابل الخادم الرسمي من CI:
 
 ```bash
-gh workflow run update-casks.yml -R eGovFramework/homebrew-egovframe -f verify=5.0.2
+gh workflow run update-casks.yml -R leejongyoung/homebrew-egovframe -f verify=5.0.2
 ```

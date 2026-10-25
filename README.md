@@ -15,6 +15,10 @@
 [![العربية](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/ar/outline.svg)](docs/README.ar.md)
 [![Français](https://raw.githubusercontent.com/leejongyoung/egovframe-badge/main/badges/lang/fr/outline.svg)](docs/README.fr.md)
 
+<!-- work-only:start -->
+> This fork tracks [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe). To install from this fork, replace `egovframework/egovframe` with `leejongyoung/egovframe` in the commands below. Maintainer documentation: [Maintenance](.github/MAINTENANCE.md).
+<!-- work-only:end -->
+
 ## About
 
 Homebrew casks for the macOS eGovFrame development environment (IDE). Downloads come from the official eGovFrame server.

@@ -13,7 +13,7 @@
 
 Hãy dùng tính năng báo cáo lỗ hổng riêng tư của GitHub:
 
-➡ <https://github.com/eGovFramework/homebrew-egovframe/security/advisories/new>
+➡ <https://github.com/leejongyoung/homebrew-egovframe/security/advisories/new>
 
 Nếu kho lưu trữ chưa bật báo cáo lỗ hổng riêng tư, vui lòng báo cáo qua [cổng thông tin eGovFrame](https://www.egovframe.go.kr/) chính thức thay vì mở issue công khai.
 
@@ -36,14 +36,18 @@ Ngoài phạm vi, vui lòng báo cho bên chịu trách nhiệm:
 
 - IDE eGovFrame và máy chủ tải xuống của nó → dự án eGovFrame, <https://www.egovframe.go.kr/> và [eGovFramework](https://github.com/eGovFramework).
 - Bản thân Homebrew → <https://github.com/Homebrew/brew/security/policy>.
+<!-- work-only:start -->
+- Vấn đề tồn tại giống hệt trong tap chính thức [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe) → hãy báo cáo cả ở đó.
+<!-- work-only:end -->
+
 ## Phiên bản được hỗ trợ
 
-Chỉ những gì có trong `Casks/` trên nhánh mặc định (`main`) được duy trì: `egovframedev-latest` và các cask theo phiên bản nêu trong [README](../README.vi.md). Các cask đã bị xóa khi có bản vá mới hơn của cùng dòng thì không được duy trì.
+Chỉ những gì có trong `Casks/` trên nhánh mặc định (`work`) được duy trì: `egovframedev-latest` và các cask theo phiên bản nêu trong [README](../README.vi.md). Các cask đã bị xóa khi có bản vá mới hơn của cùng dòng thì không được duy trì.
 
 ## Tự xác minh bản tải xuống
 
-Mỗi cask ghim một SHA-256 cho từng kiến trúc mà nó cung cấp, và mỗi [Release](https://github.com/eGovFramework/homebrew-egovframe/releases) đều liệt kê chúng. Một số cask theo phiên bản (ví dụ 3.10.0 và 4.0.0) chỉ dành cho Intel nên chỉ ghim một hash. Để kiểm tra lại một phiên bản với máy chủ chính thức từ CI:
+Mỗi cask ghim một SHA-256 cho từng kiến trúc mà nó cung cấp, và mỗi [Release](https://github.com/leejongyoung/homebrew-egovframe/releases) đều liệt kê chúng. Một số cask theo phiên bản (ví dụ 3.10.0 và 4.0.0) chỉ dành cho Intel nên chỉ ghim một hash. Để kiểm tra lại một phiên bản với máy chủ chính thức từ CI:
 
 ```bash
-gh workflow run update-casks.yml -R eGovFramework/homebrew-egovframe -f verify=5.0.2
+gh workflow run update-casks.yml -R leejongyoung/homebrew-egovframe -f verify=5.0.2
 ```

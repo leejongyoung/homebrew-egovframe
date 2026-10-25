@@ -13,7 +13,7 @@
 
 대신 GitHub 비공개 취약점 신고를 이용해 주세요.
 
-➡ <https://github.com/eGovFramework/homebrew-egovframe/security/advisories/new>
+➡ <https://github.com/leejongyoung/homebrew-egovframe/security/advisories/new>
 
 저장소에 비공개 취약점 신고가 활성화되어 있지 않다면, 공개 이슈 대신 공식 [표준프레임워크 포털](https://www.egovframe.go.kr/)을 통해 접수해 주세요.
 
@@ -36,14 +36,18 @@
 
 - eGovFrame IDE와 배포 서버 → 표준프레임워크 프로젝트, <https://www.egovframe.go.kr/> 및 [eGovFramework](https://github.com/eGovFramework).
 - Homebrew 자체 → <https://github.com/Homebrew/brew/security/policy>.
+<!-- work-only:start -->
+- 공식 tap [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe)에도 똑같이 있는 문제 → 그쪽에도 알려 주세요.
+<!-- work-only:end -->
+
 ## 지원 대상
 
-기본 브랜치(`main`)의 `Casks/`에 있는 것만 관리합니다. `egovframedev-latest`와 [README](../README.ko.md)에 나열된 버전별 cask가 해당합니다. 같은 계열의 새 패치가 나와 삭제된 cask는 대상이 아닙니다.
+기본 브랜치(`work`)의 `Casks/`에 있는 것만 관리합니다. `egovframedev-latest`와 [README](../README.ko.md)에 나열된 버전별 cask가 해당합니다. 같은 계열의 새 패치가 나와 삭제된 cask는 대상이 아닙니다.
 
 ## 직접 해시 확인
 
-모든 cask는 제공하는 각 아키텍처의 SHA-256을 고정하며, [Release](https://github.com/eGovFramework/homebrew-egovframe/releases)에도 적혀 있습니다. 일부 버전별 cask(예: 3.10.0, 4.0.0)는 Intel 전용이라 해시가 하나뿐입니다. CI에서 공식 서버와 다시 대조하려면:
+모든 cask는 제공하는 각 아키텍처의 SHA-256을 고정하며, [Release](https://github.com/leejongyoung/homebrew-egovframe/releases)에도 적혀 있습니다. 일부 버전별 cask(예: 3.10.0, 4.0.0)는 Intel 전용이라 해시가 하나뿐입니다. CI에서 공식 서버와 다시 대조하려면:
 
 ```bash
-gh workflow run update-casks.yml -R eGovFramework/homebrew-egovframe -f verify=5.0.2
+gh workflow run update-casks.yml -R leejongyoung/homebrew-egovframe -f verify=5.0.2
 ```

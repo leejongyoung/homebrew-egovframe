@@ -13,7 +13,7 @@
 
 Use en su lugar el informe privado de vulnerabilidades de GitHub:
 
-➡ <https://github.com/eGovFramework/homebrew-egovframe/security/advisories/new>
+➡ <https://github.com/leejongyoung/homebrew-egovframe/security/advisories/new>
 
 Si el informe privado de vulnerabilidades no está habilitado en el repositorio, informe a través del [portal oficial de eGovFrame](https://www.egovframe.go.kr/) en lugar de abrir una incidencia pública.
 
@@ -36,14 +36,18 @@ Fuera del alcance, infórmelo al responsable:
 
 - El IDE de eGovFrame y su servidor de descargas → el proyecto eGovFrame, <https://www.egovframe.go.kr/> y [eGovFramework](https://github.com/eGovFramework).
 - Homebrew en sí → <https://github.com/Homebrew/brew/security/policy>.
+<!-- work-only:start -->
+- Un problema que existe idéntico en el tap oficial [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe) → infórmelo también allí.
+<!-- work-only:end -->
+
 ## Versiones compatibles
 
-Solo se mantiene lo que está en `Casks/` de la rama predeterminada (`main`): `egovframedev-latest` y los casks con versión indicados en el [README](../README.es.md). Los casks eliminados al llegar un parche más reciente de la misma serie no se mantienen.
+Solo se mantiene lo que está en `Casks/` de la rama predeterminada (`work`): `egovframedev-latest` y los casks con versión indicados en el [README](../README.es.md). Los casks eliminados al llegar un parche más reciente de la misma serie no se mantienen.
 
 ## Verificar una descarga por su cuenta
 
-Cada cask fija un SHA-256 para cada arquitectura que ofrece, y cada [Release](https://github.com/eGovFramework/homebrew-egovframe/releases) los enumera. Algunos casks con versión (por ejemplo 3.10.0 y 4.0.0) son solo para Intel, por lo que fijan un único hash. Para volver a comprobar una versión con el servidor oficial desde CI:
+Cada cask fija un SHA-256 para cada arquitectura que ofrece, y cada [Release](https://github.com/leejongyoung/homebrew-egovframe/releases) los enumera. Algunos casks con versión (por ejemplo 3.10.0 y 4.0.0) son solo para Intel, por lo que fijan un único hash. Para volver a comprobar una versión con el servidor oficial desde CI:
 
 ```bash
-gh workflow run update-casks.yml -R eGovFramework/homebrew-egovframe -f verify=5.0.2
+gh workflow run update-casks.yml -R leejongyoung/homebrew-egovframe -f verify=5.0.2
 ```

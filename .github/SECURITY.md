@@ -13,7 +13,7 @@
 
 Use GitHub's private vulnerability reporting instead:
 
-➡ <https://github.com/eGovFramework/homebrew-egovframe/security/advisories/new>
+➡ <https://github.com/leejongyoung/homebrew-egovframe/security/advisories/new>
 
 If private vulnerability reporting is not enabled on the repository, please report through the official [eGovFrame portal](https://www.egovframe.go.kr/) instead of opening a public issue.
 
@@ -36,14 +36,18 @@ Out of scope, please report to the owner:
 
 - The eGovFrame IDE and its download server → the eGovFrame project, <https://www.egovframe.go.kr/> and [eGovFramework](https://github.com/eGovFramework).
 - Homebrew itself → <https://github.com/Homebrew/brew/security/policy>.
+<!-- work-only:start -->
+- A problem that exists identically in the official tap [eGovFramework/homebrew-egovframe](https://github.com/eGovFramework/homebrew-egovframe) → report it there as well.
+<!-- work-only:end -->
+
 ## Supported versions
 
-Only what is in `Casks/` on the default branch (`main`) is maintained: `egovframedev-latest` and the versioned casks listed in the [README](/docs/README.en.md). Casks removed when a newer patch of the same series arrived are not.
+Only what is in `Casks/` on the default branch (`work`) is maintained: `egovframedev-latest` and the versioned casks listed in the [README](/docs/README.en.md). Casks removed when a newer patch of the same series arrived are not.
 
 ## Verifying a download yourself
 
-Every cask pins a SHA-256 for each architecture it provides, and each [Release](https://github.com/eGovFramework/homebrew-egovframe/releases) lists them. Some versioned casks (for example 3.10.0 and 4.0.0) are Intel-only, so they pin a single hash. To re-check a version against the official server from CI:
+Every cask pins a SHA-256 for each architecture it provides, and each [Release](https://github.com/leejongyoung/homebrew-egovframe/releases) lists them. Some versioned casks (for example 3.10.0 and 4.0.0) are Intel-only, so they pin a single hash. To re-check a version against the official server from CI:
 
 ```bash
-gh workflow run update-casks.yml -R eGovFramework/homebrew-egovframe -f verify=5.0.2
+gh workflow run update-casks.yml -R leejongyoung/homebrew-egovframe -f verify=5.0.2
 ```
