@@ -70,8 +70,10 @@ jobs:
           REMOVED: ${{ steps.update.outputs.removed }}
         run: |
           set -euo pipefail
-          versions=${ADDED//,/ }
-          branch="auto/egovframedev-${ADDED//,/-}"
+          # 최종 트리에 남은 Cask만으로 제목·본문을 만든다(같은 계열 중간 패치는 생성 후 삭제됨).
+          summary=$(python3 scripts/pr_summary.py --added "$ADDED" --removed "$REMOVED" --body-file body.md)
+          title=$(echo "$summary" | sed -n 's/^title=//p')
+          branch=$(echo "$summary" | sed -n 's/^branch=//p')
           if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
             echo "::notice::$branch already exists on origin (open or closed PR) — not opening another"
             exit 0
@@ -84,23 +86,8 @@ jobs:
           git checkout -b "$branch"
           git status --short
           git add -A Casks README.md code-signing-guideline.md docs
-          title="feat(casks): add egovframedev@${ADDED//,/, egovframedev@}"
           git commit -m "$title"
           git push origin "$branch"
-          {
-            echo "Detected on https://www.egovframe.go.kr/home/sub.do?menuNo=40 and downloaded from the official host."
-            echo
-            for v in $versions; do
-              echo "### $v"
-              sed -n '/sha256/,/intel:/p' "Casks/egovframedev@$v.rb" | sed 's/^ *//; s/^sha256 //; s/^/    /'
-              echo
-            done
-            if [ -n "$REMOVED" ]; then echo "Removed older patch casks of the same series: ${REMOVED//,/, }"; fi
-            echo
-            echo "Merging this publishes the GitHub Release for the new version (release.yml)."
-            echo
-            echo "Check before merging: \`gh workflow run update-casks.yml -f verify=<version>\` re-downloads the DMGs and compares the hashes."
-          } > body.md
           if pr_url=$(gh pr create --base "$base_branch" --head "$branch" --title "$title" --body-file body.md 2>&1); then
             echo "$pr_url" | tee -a "$GITHUB_STEP_SUMMARY"
           else
