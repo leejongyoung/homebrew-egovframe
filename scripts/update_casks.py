@@ -133,23 +133,40 @@ def latest_version(casks_dir: Path) -> str:
     return re.search(r'version "([^"]+)"', m.group(0)).group(1)
 
 
-def dmg_urls(template: str, version: str, download_base: str) -> dict[str, str]:
-    """Expand the template cask's url for a version, for each arch."""
-    m = URL_LINE.search(template)
+SCALAR_SHA = re.compile(r'^\s*sha256 "([0-9a-f]{64})"', re.M)
+ARCH_LINE = re.compile(r'arch arm: "([^"]+)", intel: "([^"]+)"')
+
+
+def dmg_urls(cask_text: str, version: str, download_base: str) -> dict[str, str]:
+    """Expand a cask's own url line for a version.
+
+    dual-architecture casks (`arch arm:, intel:` + `#{arch}` in the url) give one url per arch;
+    single-file casks (e.g. 3.x `Mac-64bit`, Intel only) give only the `intel` url.
+    """
+    m = URL_LINE.search(cask_text)
     if not m:
-        raise SystemExit("template cask has no url line")
+        raise SystemExit("cask has no url line")
     raw = m.group(1).replace(DOWNLOAD_BASE, download_base)
     major, minor = vtuple(version)[:2]
-    am = re.search(r'arch arm: "([^"]+)", intel: "([^"]+)"', template)
+    raw = raw.replace("#{version.major_minor}", f"{major}.{minor}").replace("#{version}", version)
+    am = ARCH_LINE.search(cask_text)
+    if "#{arch}" not in raw:
+        return {"intel": raw}
     if not am:
-        raise SystemExit("template cask has no arch line")
+        raise SystemExit("cask url uses #{arch} but has no arch line")
     arch_names = dict(zip(ARCHES, am.groups()))
-    out = {}
-    for arch in ARCHES:
-        out[arch] = (raw.replace("#{version.major_minor}", f"{major}.{minor}")
-                        .replace("#{version}", version)
-                        .replace("#{arch}", arch_names[arch]))
-    return out
+    return {arch: raw.replace("#{arch}", arch_names[arch]) for arch in ARCHES}
+
+
+def expected_hashes(cask_text: str) -> dict[str, str]:
+    """SHA-256 values recorded in a cask: {arm, intel} for dual-arch, {intel} for single-file casks."""
+    m = SHA_BLOCK.search(cask_text)
+    if m:
+        return {"arm": m.group(3), "intel": m.group(6)}
+    m = SCALAR_SHA.search(cask_text)
+    if m:
+        return {"intel": m.group(1)}
+    raise SystemExit("cask sha256 line not recognised")
 
 
 def sha256_of(url: str) -> str:
@@ -215,11 +232,10 @@ def verify_existing(root: Path, version: str, download_base: str) -> int:
         print(f"no cask for {version}", file=sys.stderr)
         return 1
     text = path.read_text(encoding="utf-8")
-    m = SHA_BLOCK.search(text)
-    expected = {"arm": m.group(3), "intel": m.group(6)}
-    template = (casks / "egovframedev-latest.rb").read_text(encoding="utf-8")
+    expected = expected_hashes(text)
     bad = 0
-    for arch, url in dmg_urls(template, version, download_base).items():
+    # URL과 해시는 선택한 버전의 Cask 자체에서 읽는다(latest 템플릿으로 바꾸지 않는다).
+    for arch, url in dmg_urls(text, version, download_base).items():
         print(f"verify {version} {arch}: {url}", file=sys.stderr)
         got = sha256_of(url)
         ok = got == expected[arch]

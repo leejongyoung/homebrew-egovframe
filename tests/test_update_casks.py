@@ -25,11 +25,13 @@ class FakeMaven:
 
     def __init__(self):
         self.files = {}
+        self.requests = []
         self.fail_next = {}
         outer = self
 
         class Handler(BaseHTTPRequestHandler):
             def _serve(self, body):
+                outer.requests.append(self.path)
                 if outer.fail_next.get(self.path, 0) > 0:
                     outer.fail_next[self.path] -= 1
                     self.send_response(503)
@@ -245,6 +247,48 @@ class UpdateCasksTest(unittest.TestCase):
         with self.assertRaises(Exception) as ctx:
             self.run_update(page("5.0.3"))
         self.assertTrue(uc.transient(ctx.exception))
+
+    # --verify 는 선택한 버전 Cask 자체의 URL·해시를 써야 한다(latest 템플릿 사용 금지).
+    def _publish_for_cask(self, version, path_suffix_by_arch, tamper=()):
+        """Cask 의 sha256 을 가짜 DMG 해시로 바꾸고, 서버에 해당 경로로 파일을 올린다."""
+        import re
+        cask = self.tmp / "Casks" / f"egovframedev@{version}.rb"
+        text = cask.read_text(encoding="utf-8")
+        shas = {}
+        for arch, path in path_suffix_by_arch.items():
+            data = f"verify {version} {arch}".encode()
+            shas[arch] = hashlib.sha256(data).hexdigest()
+            self.maven.files[path] = (data + b"x") if arch in tamper else data
+        if "arm" in shas:
+            text = uc.SHA_BLOCK.sub(lambda m: f'{m.group(1)}sha256 arm:{m.group(2)}"{shas["arm"]}",\n'
+                                              f'{m.group(4)}intel:{m.group(5)}"{shas["intel"]}"', text, count=1)
+        else:
+            text = uc.SCALAR_SHA.sub(lambda m: m.group(0).replace(m.group(1), shas["intel"]), text, count=1)
+        cask.write_text(text, encoding="utf-8")
+
+    def test_verify_single_file_intel_cask_requests_only_its_own_file(self):
+        self._publish_for_cask("3.10.0", {"intel": "/eGovFrameDev-3.10.0-Mac-64bit.dmg"})
+        self.assertEqual(uc.verify_existing(self.tmp, "3.10.0", self.maven.base), 0)
+        self.assertEqual(self.maven.requests, ["/eGovFrameDev-3.10.0-Mac-64bit.dmg"])
+
+    def test_verify_dual_arch_mac_naming_uses_the_recorded_filenames(self):
+        base = "/egovframework_v4.2/2_DevelopmentEnvironment/eGovFrame-Dev/4.2.1/eGovFrameDev-4.2.1-Mac-"
+        self._publish_for_cask("4.2.1", {"arm": base + "AArch64.dmg", "intel": base + "x86_64.dmg"})
+        self.assertEqual(uc.verify_existing(self.tmp, "4.2.1", self.maven.base), 0)
+        self.assertEqual(sorted(self.maven.requests), sorted([base + "AArch64.dmg", base + "x86_64.dmg"]))
+        self.assertFalse(any("macOS" in r for r in self.maven.requests))
+
+    def test_verify_dual_arch_macos_naming(self):
+        base = "/egovframework_v5.0/2_DevelopmentEnvironment/eGovFrame-Dev/5.0.2/eGovFrameDev-5.0.2-macOS-"
+        self._publish_for_cask("5.0.2", {"arm": base + "AArch64.dmg", "intel": base + "x86_64.dmg"})
+        self.assertEqual(uc.verify_existing(self.tmp, "5.0.2", self.maven.base), 0)
+
+    def test_verify_reports_mismatch_per_architecture(self):
+        base = "/egovframework_v4.2/2_DevelopmentEnvironment/eGovFrame-Dev/4.2.1/eGovFrameDev-4.2.1-Mac-"
+        self._publish_for_cask("4.2.1", {"arm": base + "AArch64.dmg", "intel": base + "x86_64.dmg"}, tamper=("intel",))
+        self.assertEqual(uc.verify_existing(self.tmp, "4.2.1", self.maven.base), 1)
+        self._publish_for_cask("3.10.0", {"intel": "/eGovFrameDev-3.10.0-Mac-64bit.dmg"}, tamper=("intel",))
+        self.assertEqual(uc.verify_existing(self.tmp, "3.10.0", self.maven.base), 1)
 
     def test_discover_versions_dedupes_and_sorts_numerically(self):
         html = page("5.0.2", "4.3.1", "5.0.10", "5.0.2", "3.10.0")
